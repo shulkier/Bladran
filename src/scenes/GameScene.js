@@ -1,29 +1,105 @@
-import Phaser from "phaser";
-import logoImg from "../assets/logo.png";
+class Example extends Phaser.Scene
+{
+    constructor ()
+    {
+        super();
+    }
 
-class GameScene extends Phaser.Scene {
-  constructor() {
-    super();
-  }
+    preload () 
+    {
+        this.load.image('map', 'assets/tests/camera/earthbound-scarab.png');
+        this.load.image("BladSprite", 'assets/bladsprite');
+        this.load.image("ButtonR", 'assets/button');
+        this.load.image("ButtonL", 'assets/button');
+        this.load.image("Cell", 'assets/cello');
+        this.load.image("redmap", 'assets/redBloodVessel');
+        this.load.image("redbluemap", 'assets/cello');
+        this.load.image("bluemap", 'assets/unnamed');
+        this.load.image("barrier", 'assets/barrier');
+    
+    }
 
-  preload() {
-    this.load.image("logo", logoImg);
-  }
+    create () 
+    {
+        this.cameras.main.setBounds(0, 0, 1024, 2048);
+    
+        this.add.image(0, 0, 'map').setOrigin(0);
+    
+        this.cameras.main.setZoom(4);
+        this.cameras.main.centerOn(0, 0);
+    
+        console.log(this.cameras.main.getScroll(767, 1096));
+        
+        this.text = this.add.text(304, 230).setText('Click to move').setScrollFactor(0);
+        this.text.setShadow(1, 1, '#000000', 2);
+    
+        let pos = 0;
+    
+        this.input.on('pointerdown', function () {
+    
+            const cam = this.cameras.main;
+    
+            if (pos === 0)
+            {
+                cam.pan(767, 1096, 2000, 'Power2');
+                pos++;
+            }
+            else if (pos === 1)
+            {
+                cam.pan(703, 1621, 2000, 'Elastic');
+                pos++;
+            }
+            else if (pos === 2)
+            {
+                cam.pan(256, 623, 2000, 'Sine.easeInOut');
+                pos++;
+            }
+            else if (pos === 3)
+            {
+                cam.pan(166, 304, 2000);
+                pos++;
+            }
+            else if (pos === 4)
+            {
+                cam.pan(624, 158, 2000);
+                pos++;
+            }
+            else if (pos === 5)
+            {
+                cam.pan(680, 330, 2000);
+                pos++;
+            }
+            else if (pos === 6)
+            {
+                cam.pan(748, 488, 2000);
+                pos++;
+            }
+            else if (pos === 7)
+            {
+                cam.pan(1003, 1719, 2000);
+                pos = 0;
+            }
+    
+        }, this);
+    }
 
-  create() {
-    const logo = this.add.image(400, 750, "logo");
-
-    this.tweens.add({
-      targets: logo,
-      y: 450,
-      duration: 2000,
-      ease: "Power2",
-      yoyo: true,
-      loop: -1,
-    });
-  }
-
-  update() {}
+    update () 
+    {
+        const cam = this.cameras.main;
+        this.text.setText(['Click to move', 'x: ' + cam.scrollX, 'y: ' + cam.scrollY ]);
+    }
 }
 
-export default GameScene;
+const config = {
+    type: Phaser.AUTO,
+    parent: 'phaser-example',
+    width: 800,
+    height: 600,
+    pixelArt: true,
+    physics: {
+        default: 'arcade',
+    },
+    scene: [ Example ]
+};
+
+const game = new Phaser.Game(config);
